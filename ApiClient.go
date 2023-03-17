@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/wolf/huaweidns/core"
+	"github.com/jicjoy/huaweidns/core"
 )
 
 const APIHOST = "https://dns.%s.myhuaweicloud.com/%s"
