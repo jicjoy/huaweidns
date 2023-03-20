@@ -25,7 +25,7 @@ type Provider struct {
 func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
 
-	fmt.Printf("AppendRecords:%s", zone)
+	fmt.Printf("AppendRecords:%s\n", zone)
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
