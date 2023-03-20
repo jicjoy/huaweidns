@@ -30,13 +30,14 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
 		p.GetZoneByName(ctx, ar.ZoneName)
-		fmt.Printf("rec: %+v,libdns:%+v", ar, rec)
+
 		res, err := p.UpdateOrcreateRecord(ctx, &ar)
 		if err != nil {
 			return rls, err
 		}
 
 		rls = append(rls, res.LibdnsRecord())
+		fmt.Printf("res: %+v", res.LibdnsRecord())
 	}
 	return rls, nil
 }

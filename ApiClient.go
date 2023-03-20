@@ -188,7 +188,7 @@ func (c *DnsClient) ApiRequest(ctx context.Context, url string, response interfa
 	}
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
-
+		fmt.Printf("body:%+v:  res:%+v", strBody, res)
 		return fmt.Errorf("huawei DNS status: HTTP %d: URI %s", res.StatusCode, url)
 	}
 
