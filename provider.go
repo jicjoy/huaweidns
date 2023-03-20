@@ -17,16 +17,19 @@ type Provider struct {
 	AccKeySecret string `json:"access_key_secret"`
 	// Optional for identifing the region of the Aliyun's Service,The default is zh-hangzhou
 	RegionID string `json:"region_id,omitempty"`
+	ZoneName string `json:"zone_name,omitempty"`
 	mu       sync.Mutex
 }
 
 // AppendRecords adds records to the zone. It returns the records that were added.
 func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
+
 	fmt.Printf("AppendRecords:%s", zone)
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
+		p.GetZoneByName(ctx, ar.ZoneName)
 		fmt.Printf("rec: %+v,libdns:%+v", ar, rec)
 		res, err := p.UpdateOrcreateRecord(ctx, &ar)
 		if err != nil {
@@ -45,6 +48,7 @@ func (p *Provider) DeleteRecords(ctx context.Context, zone string, recs []libdns
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
+		p.GetZoneByName(ctx, ar.ZoneName)
 		if len(ar.ID) == 0 {
 			r0, err := p.client.GetRecordLists(ctx, ar.Name)
 			ar.ID = r0.Response[0].ID
@@ -66,6 +70,7 @@ func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record
 	var rls []libdns.Record
 	fmt.Printf("get:%s", zone)
 	p.getClient(ctx, zone)
+
 	recs, err := p.client.GetRecordLists(ctx, "")
 	if err != nil {
 		return nil, err
