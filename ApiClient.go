@@ -189,7 +189,7 @@ func (c *DnsClient) ApiRequest(ctx context.Context, url string, response interfa
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 
-		return fmt.Errorf("get error status: HTTP %d: %+v", res.StatusCode, res)
+		return fmt.Errorf("get error status: HTTP %d: URI:  %s, ZONE_NAME:%s body: %+v", res.StatusCode, url, c.ZoneID, res)
 	}
 
 	return err

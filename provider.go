@@ -2,6 +2,7 @@ package huaweidns
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/libdns/libdns"
@@ -22,6 +23,7 @@ type Provider struct {
 // AppendRecords adds records to the zone. It returns the records that were added.
 func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
+	fmt.Printf("AppendRecords:%s", zone)
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
@@ -61,6 +63,7 @@ func (p *Provider) DeleteRecords(ctx context.Context, zone string, recs []libdns
 // GetRecords lists all the records in the zone.
 func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record, error) {
 	var rls []libdns.Record
+	fmt.Printf("get:%s", zone)
 	p.getClient(ctx, zone)
 	recs, err := p.client.GetRecordLists(ctx, "")
 	if err != nil {
@@ -76,6 +79,7 @@ func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record
 // or creating new ones. It returns the updated records.
 func (p *Provider) SetRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
+	fmt.Printf("Set:%s", zone)
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
