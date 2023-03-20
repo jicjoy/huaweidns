@@ -18,6 +18,7 @@ func (p *Provider) getClient(ctx context.Context, zoneName string) {
 		p.client, _ = b.Build()
 
 	}
+
 	p.GetZoneByName(ctx, zoneName)
 }
 

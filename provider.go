@@ -27,6 +27,7 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
+		fmt.Printf("rec: %+v,libdns:%+v", ar, rec)
 		res, err := p.UpdateOrcreateRecord(ctx, &ar)
 		if err != nil {
 			return rls, err
