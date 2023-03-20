@@ -97,12 +97,12 @@ func (c *DnsClient) GetZoneList(ctx context.Context, zoneName string, isAll bool
 	return *response, nil
 }
 
-func (c *DnsClient) GetRecordLists(ctx context.Context, name string) (Recordsets, error) {
+func (c *DnsClient) GetRecordLists(ctx context.Context, name string, dType string) (Recordsets, error) {
 	var url string
 	if len(name) == 0 {
 		url = fmt.Sprintf("%s/zones/%s/recordsets", c.entryPoint, c.ZoneID)
 	} else {
-		url = fmt.Sprintf("%s/zones/%s/recordsets?name=%s", c.entryPoint, c.ZoneID, name)
+		url = fmt.Sprintf("%s/zones/%s/recordsets?name=%s&type=%s", c.entryPoint, c.ZoneID, name, dType)
 	}
 
 	response := &Recordsets{}
