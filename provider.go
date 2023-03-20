@@ -25,12 +25,14 @@ type Provider struct {
 func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
 
-	fmt.Printf("AppendRecords:%s\n", zone)
+	fmt.Printf("AppendRecords: %s\n", zone)
+
 	p.getClient(ctx, zone)
 	for _, rec := range recs {
+		fmt.Printf("Libdns: %+v\n", rec)
 		ar := ToHuaweiDnsRecord(rec, zone)
-		fmt.Printf("ar: %+v", ar)
-		p.GetZoneByName(ctx, ar.ZoneName)
+		fmt.Printf("ar: %+v\n", ar)
+		//p.GetZoneByName(ctx, ar.ZoneName)
 		if ar.ID == "" {
 			rId, _ := p.client.GetRecordLists(ctx, ar.Name, ar.Type)
 			if len(rId.Response) > 0 {
@@ -54,10 +56,11 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 func (p *Provider) DeleteRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
 	p.getClient(ctx, zone)
+	fmt.Printf("Zone: %+v\n", zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
 		fmt.Printf("ar: %+v", ar)
-		p.GetZoneByName(ctx, ar.ZoneName)
+		//p.GetZoneByName(ctx, ar.ZoneName)
 		if len(ar.ID) == 0 {
 			r0, err := p.client.GetRecordLists(ctx, ar.Name, ar.Type)
 			ar.ID = r0.Response[0].ID
