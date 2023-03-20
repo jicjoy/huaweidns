@@ -173,7 +173,10 @@ func (c *DnsClient) ApiRequest(ctx context.Context, url string, response interfa
 		return err
 	}
 	defer res.Body.Close()
+
 	var buf []byte
+	c.Method = ""
+	c.Body = strings.NewReader(``)
 	buf, err = io.ReadAll(res.Body)
 
 	strBody := string(buf)
