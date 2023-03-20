@@ -2,6 +2,7 @@ package huaweidns
 
 import (
 	"context"
+	"fmt"
 )
 
 func (p *Provider) getClient(ctx context.Context, zoneName string) {
@@ -21,7 +22,8 @@ func (p *Provider) getClient(ctx context.Context, zoneName string) {
 	if len(p.ZoneName) > 0 {
 		zoneName = p.ZoneName
 	}
-	p.GetZoneByName(ctx, zoneName)
+	fmt.Printf("zoneName: %s", zoneName)
+	p.GetZoneByName(ctx, "iitmall.com")
 }
 
 func (p *Provider) GetZoneByName(ctx context.Context, name string) {
