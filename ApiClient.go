@@ -165,7 +165,7 @@ func (c *DnsClient) ApiRequest(ctx context.Context, url string, response interfa
 	r.Header.Add("x-stage", "RELEASE")
 	r.Header.Add("User-Agent", "huaweicloud-usdk-go/3.0")
 	c.Signer.Sign(r)
-	//fmt.Println(r.Header)
+	fmt.Printf("api: %s, method:  %s,body: %+v", url, c.Method, c.Body)
 
 	res, err := c.client.Do(r)
 	if err != nil {
