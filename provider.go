@@ -26,8 +26,11 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	var rls []libdns.Record
 
 	fmt.Printf("AppendRecords: %s\n", zone)
-
 	p.getClient(ctx, zone)
+	zer := p.ValidateZone()
+	if zer != nil {
+		return rls, zer
+	}
 	for _, rec := range recs {
 		fmt.Printf("Libdns: %+v\n", rec)
 		ar := ToHuaweiDnsRecord(rec, zone)
@@ -56,6 +59,10 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 func (p *Provider) DeleteRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
 	p.getClient(ctx, zone)
+	zer := p.ValidateZone()
+	if zer != nil {
+		return rls, zer
+	}
 	fmt.Printf("Zone: %+v\n", zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
@@ -82,7 +89,10 @@ func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record
 	var rls []libdns.Record
 	fmt.Printf("get:%s", zone)
 	p.getClient(ctx, zone)
-
+	zer := p.ValidateZone()
+	if zer != nil {
+		return rls, zer
+	}
 	recs, err := p.client.GetRecordLists(ctx, "", "")
 	if err != nil {
 		return nil, err
@@ -99,6 +109,10 @@ func (p *Provider) SetRecords(ctx context.Context, zone string, recs []libdns.Re
 	var rls []libdns.Record
 	fmt.Printf("Set:%s", zone)
 	p.getClient(ctx, zone)
+	zer := p.ValidateZone()
+	if zer != nil {
+		return rls, zer
+	}
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
 		res, err := p.UpdateOrcreateRecord(ctx, &ar)

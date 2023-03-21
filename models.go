@@ -57,10 +57,10 @@ func ToHuaweiDnsRecord(rec libdns.Record, zone string) RecordTag {
 
 	return RecordTag{
 		ID:       rec.ID,
-		Name:     strings.Trim(libdns.AbsoluteName(rec.Name, zone), ".") + ".",
+		Name:     strings.Trim(libdns.AbsoluteName(libdns.RelativeName(rec.Name, zone), zone), ".") + ".",
 		Ttl:      uint32(rec.TTL.Seconds()),
 		Type:     strings.ToUpper(rec.Type),
-		ZoneName: strings.Trim(libdns.AbsoluteName(rec.Name, zone), ".") + ".",
+		ZoneName: strings.Trim(zone, ".") + ".",
 		Records:  getRecords(rec.Type, rec.Value),
 	}
 }
@@ -73,4 +73,14 @@ func getRecords(rType string, value string) []string {
 	}
 	return []string{value}
 	//return []string{fmt.Sprintf("\"%s\"", value)}
+}
+
+func ValidateZone(zone string) bool {
+	if len(zone) == 0 {
+		return false
+	}
+	zoneArr := strings.Split(strings.Trim(zone, "."), ".")
+	fmt.Println(zoneArr)
+	return len(zoneArr) > 1
+
 }

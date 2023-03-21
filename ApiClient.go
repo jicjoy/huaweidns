@@ -99,6 +99,7 @@ func (c *DnsClient) GetZoneList(ctx context.Context, zoneName string, isAll bool
 
 func (c *DnsClient) GetRecordLists(ctx context.Context, name string, dType string) (Recordsets, error) {
 	var url string
+
 	if len(name) == 0 {
 		url = fmt.Sprintf("%s/zones/%s/recordsets", c.entryPoint, c.ZoneID)
 	} else {
@@ -106,6 +107,7 @@ func (c *DnsClient) GetRecordLists(ctx context.Context, name string, dType strin
 	}
 
 	response := &Recordsets{}
+
 	err := c.ApiRequest(ctx, url, response)
 	return *response, err
 }

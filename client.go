@@ -8,6 +8,7 @@ import (
 func (p *Provider) getClient(ctx context.Context, zoneName string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
+	p.ZoneName = zoneName
 	if p.client == nil {
 		config := &WithConfig{
 			AccKeyID:     p.AccKeyID,
@@ -19,11 +20,12 @@ func (p *Provider) getClient(ctx context.Context, zoneName string) {
 		p.client, _ = b.Build()
 
 	}
-	if len(p.ZoneName) > 0 {
-		zoneName = p.ZoneName
+
+	if ValidateZone(zoneName) {
+		p.GetZoneByName(ctx, zoneName)
 	}
 	fmt.Printf("zoneName: %s", zoneName)
-	p.GetZoneByName(ctx, "iitmall.com")
+
 }
 
 func (p *Provider) GetZoneByName(ctx context.Context, name string) {
@@ -33,8 +35,15 @@ func (p *Provider) GetZoneByName(ctx context.Context, name string) {
 	}
 
 }
+func (p *Provider) ValidateZone() error {
+	if len(p.client.ZoneID) == 0 {
+		return fmt.Errorf("the Zone Name error %s", p.ZoneName)
+	}
 
+	return nil
+}
 func (p *Provider) UpdateOrcreateRecord(ctx context.Context, rec *RecordTag) (RecordTag, error) {
+
 	if rec.ID == "" {
 		return p.client.CreateRecord(ctx, rec)
 	}
