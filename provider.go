@@ -26,11 +26,12 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	var rls []libdns.Record
 
 	fmt.Printf("AppendRecords: %s\n", zone)
-	p.getClient(ctx, zone)
-	zer := p.ValidateZone()
-	if zer != nil {
-		return rls, zer
-	}
+	//p.getClient(ctx, zone)
+	//zer := p.ValidateZone()
+	//if zer != nil {
+	//	return rls, zer
+	//}
+	zone = "iitmall.com."
 	for _, rec := range recs {
 		fmt.Printf("Libdns: %+v\n", rec)
 		ar := ToHuaweiDnsRecord(rec, zone)
