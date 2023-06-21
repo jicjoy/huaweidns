@@ -55,7 +55,7 @@ func (r *RecordTag) LibdnsRecord() libdns.Record {
 
 func ToHuaweiDnsRecord(rec libdns.Record, zone string) RecordTag {
 	if !ValidateZone(zone) {
-		zone = rec.Name
+		zone = libdns.AbsoluteName(rec.Name, zone)
 	}
 	fmt.Printf("reczone: %+v\n", zone)
 	return RecordTag{
