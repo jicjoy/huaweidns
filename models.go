@@ -54,16 +54,19 @@ func (r *RecordTag) LibdnsRecord() libdns.Record {
 }
 
 func ToHuaweiDnsRecord(rec libdns.Record, zone string) RecordTag {
+	zoneName := ""
 	if !ValidateZone(zone) {
-		zone = libdns.AbsoluteName(rec.Name, zone)
+		zoneName = libdns.AbsoluteName(getZone(rec.Name), zone)
+	} else {
+		zoneName = zone
 	}
 	fmt.Printf("reczone: %+v\n", zone)
 	return RecordTag{
 		ID:       rec.ID,
-		Name:     strings.Trim(libdns.AbsoluteName(libdns.RelativeName(rec.Name, zone), zone), ".") + ".",
+		Name:     strings.Trim(libdns.AbsoluteName(rec.Name, zone), ".") + ".",
 		Ttl:      uint32(rec.TTL.Seconds()),
 		Type:     strings.ToUpper(rec.Type),
-		ZoneName: strings.Trim(zone, ".") + ".",
+		ZoneName: strings.Trim(zoneName, ".") + ".",
 		Records:  getRecords(rec.Type, rec.Value),
 	}
 }
@@ -76,6 +79,16 @@ func getRecords(rType string, value string) []string {
 	}
 	return []string{value}
 	//return []string{fmt.Sprintf("\"%s\"", value)}
+}
+
+func getZone(name string) string {
+	zoneArr := strings.Split(strings.Trim(name, "."), ".")
+	zoneLen := len(zoneArr)
+	if zoneLen > 1 {
+		return zoneArr[zoneLen-1]
+	}
+
+	return name
 }
 
 func ValidateZone(zone string) bool {
