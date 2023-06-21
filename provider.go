@@ -26,17 +26,12 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 	var rls []libdns.Record
 
 	fmt.Printf("AppendRecords: %s\n", zone)
-	zone = "iitmall.com."
-	p.getClient(ctx, zone)
-	zer := p.ValidateZone()
-	if zer != nil {
-		return rls, zer
-	}
 
 	for _, rec := range recs {
 		fmt.Printf("Libdns: %+v\n", rec)
 		ar := ToHuaweiDnsRecord(rec, zone)
 		fmt.Printf("ar: %+v\n", ar)
+		p.getClient(ctx, ar.ZoneName)
 		//p.GetZoneByName(ctx, ar.ZoneName)
 		if ar.ID == "" {
 			rId, _ := p.client.GetRecordLists(ctx, ar.Name, ar.Type)
@@ -60,15 +55,12 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, recs []libdns
 // it will be looked up. It returns the records that were deleted.
 func (p *Provider) DeleteRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
-	p.getClient(ctx, zone)
-	zer := p.ValidateZone()
-	if zer != nil {
-		return rls, zer
-	}
+
 	fmt.Printf("Zone: %+v\n", zone)
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
 		fmt.Printf("ar: %+v", ar)
+		p.getClient(ctx, ar.ZoneName)
 		//p.GetZoneByName(ctx, ar.ZoneName)
 		if len(ar.ID) == 0 {
 			r0, err := p.client.GetRecordLists(ctx, ar.Name, ar.Type)
@@ -110,13 +102,10 @@ func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record
 func (p *Provider) SetRecords(ctx context.Context, zone string, recs []libdns.Record) ([]libdns.Record, error) {
 	var rls []libdns.Record
 	fmt.Printf("Set:%s", zone)
-	p.getClient(ctx, zone)
-	zer := p.ValidateZone()
-	if zer != nil {
-		return rls, zer
-	}
+
 	for _, rec := range recs {
 		ar := ToHuaweiDnsRecord(rec, zone)
+		p.getClient(ctx, ar.ZoneName)
 		res, err := p.UpdateOrcreateRecord(ctx, &ar)
 		if err != nil {
 			return nil, err
